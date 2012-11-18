@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
+  , nconf = require('nconf')
   , path = require('path');
 
 var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
@@ -14,7 +15,7 @@ var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 var app = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', nconf.get('app:port'));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -30,7 +31,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-var articleProvider = new ArticleProvider('localhost', 27017);
+var articleProvider = new ArticleProvider();
 
 app.get('/', function(req, res){
 	articleProvider.findAll(function(error, docs){

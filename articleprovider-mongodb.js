@@ -4,18 +4,26 @@ var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
-ArticleProvider = function(host, port) {
-  this.db= new Db('node-mongo-blog', new Server(host, port, {auto_reconnect: true}, {}));
+var nconf = require('nconf');
+nconf.argv()
+ 	 .env()
+     .file({ file: 'production.json' })
+	 .file({ file: 'dev.json' });
+
+ArticleProvider = function() {
+  this.db= new Db(nconf.get('database:name'), new Server(nconf.get('database:host'), nconf.get('database:port'), {auto_reconnect: true}, {}));
   this.db.open(function(err,data){
      if(data){
-        data.authenticate('username', 'password', function(err2,data2){
-             if(data2){
-                 console.log("Database opened");
-             }
-             else{
-                 console.log(err2);
-             }
-         });
+		if(nconf.get('database:username')){
+			data.authenticate(nconf.get('database:username'), nconf.get('database:password'), function(err2,data2){
+	             if(data2){
+	                 console.log("Database opened");
+	             }
+	             else{
+	                 console.log(err2);
+	             }
+	         });	
+		}	
       }
       else{
            console.log(err);
