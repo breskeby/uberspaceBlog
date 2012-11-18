@@ -6,9 +6,22 @@ var ObjectID = require('mongodb').ObjectID;
 
 ArticleProvider = function(host, port) {
   this.db= new Db('node-mongo-blog', new Server(host, port, {auto_reconnect: true}, {}));
-  this.db.open(function(){});
+  this.db.open(function(err,data){
+     if(data){
+        data.authenticate('username', 'password', function(err2,data2){
+             if(data2){
+                 console.log("Database opened");
+             }
+             else{
+                 console.log(err2);
+             }
+         });
+      }
+      else{
+           console.log(err);
+      }
+   });
 };
-
 //getCollection
 
 ArticleProvider.prototype.getCollection= function(callback) {
