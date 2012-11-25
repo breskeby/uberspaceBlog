@@ -6,7 +6,13 @@
     "name": "node-mongo-blog",
     "host": "127.0.0.1",
     "port": 27017,
-    "username": "",
-    "password": ""
+    "username": "test",
+    "password": "test"
+  },
+  "import": {
+    "importDirectory":"import",
+    "podcasts": {
+		"dbfile":"Downcast.sqlite"
+    }   
   }
 }
